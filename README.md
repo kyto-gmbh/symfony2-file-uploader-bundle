@@ -1,6 +1,10 @@
 PunkAveFileUploaderBundle
 =========================
 
+# Maintainer Needed!
+
+This bundle is no longer actively updated. It is maintained for bugs affecting use with Symfony 2.0.x only. If you are interested in taking over maintenance of this bundle, please contact [tom@punkave.com](mailto:tom@punkave.com). Thanks!
+
 Introduction
 ============
 
@@ -173,7 +177,7 @@ Let's assume there is an edit.html.twig template associated with the edit action
     $(function() {
         new PunkAveFileUploader({
             'uploadUrl': {{ path('upload', { editId: editId }) | json_encode | raw }},
-            'viewUrl': {{ '/uploads/tmp/attachments/' ~ editId | json_encode | raw }},
+            'viewUrl': {{ ('/uploads/tmp/attachments/' ~ editId) | json_encode | raw }},
             'el': '.file-uploader',
             'existingFiles': {{ punkave_get_files('tmp/attachments/' ~ editId) | json_encode | raw }},
             'delaySubmitWhileUploading': '.edit-form'
