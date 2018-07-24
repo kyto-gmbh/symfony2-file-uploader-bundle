@@ -92,11 +92,14 @@ function PunkAveFileUploader(options)
   // result returned by the UploadHandler class on the PHP side
   function appendEditableImage(info)
   {
+    var HTTP_STATUS_CODE_LOCKED = 423;
+
     if (info.error)
     {
       self.errorCallback(info);
       return;
     }
+
     var li = $(fileTemplate(info));
     li.find('[data-action="delete"]').click(function(event) {
       var file = $(this).closest('[data-name]');
@@ -107,13 +110,14 @@ function PunkAveFileUploader(options)
         success: function() {
           file.remove();
         },
-        error: function ( xhr , msg, optional ) {
-          if ( optional == 'Locked') {
+        error: function (xhr) {
+          if (xhr.status === HTTP_STATUS_CODE_LOCKED) {
             file.find(".error-image-used").show().delay(3000).fadeOut();
           }
         },
         dataType: 'json'
       });
+
       return false;
     });
 
