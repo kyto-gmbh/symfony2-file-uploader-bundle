@@ -92,28 +92,30 @@ function PunkAveFileUploader(options)
   // result returned by the UploadHandler class on the PHP side
   function appendEditableImage(info)
   {
-    var HTTP_STATUS_CODE_LOCKED = 423;
-
     if (info.error)
     {
       self.errorCallback(info);
       return;
     }
 
-    var li = $(fileTemplate(info));
-    li.find('[data-action="delete"]').click(function(event) {
-      var file = $(this).closest('[data-name]');
-      var name = file.attr('data-name');
+    var HTTP_STATUS_CODE_LOCKED = 423,
+        $thumbnailContainer = $(fileTemplate(info)),
+        $deleteButton = $thumbnailContainer.find('[data-action="delete"]');
+
+    $deleteButton.click(function() {
+      var $currentDeleteButton = $(this),
+          $currentThumbnailContainer = $currentDeleteButton.closest('[data-name]'),
+          fileName = $currentThumbnailContainer.attr('data-name');
+
       $.ajax({
         type: 'delete',
-        url: setQueryParameter(uploadUrl, 'file', name),
+        url: setQueryParameter(uploadUrl, 'file', fileName),
         success: function() {
-          file.remove();
+          $currentThumbnailContainer.remove();
         },
         error: function (xhr) {
-          if (xhr.status === HTTP_STATUS_CODE_LOCKED) {
-            file.find(".error-image-used").show().delay(3000).fadeOut();
-          }
+          var errorType = xhr.status === HTTP_STATUS_CODE_LOCKED ? 'locked' : 'unknown';
+          $currentDeleteButton.trigger('image-deletion-error', errorType);
         },
         dataType: 'json'
       });
@@ -121,7 +123,7 @@ function PunkAveFileUploader(options)
       return false;
     });
 
-    thumbnails.append(li);
+    thumbnails.append($thumbnailContainer);
   }
 
   function setQueryParameter(url, param, paramVal)
