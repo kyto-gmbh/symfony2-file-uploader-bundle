@@ -53,7 +53,7 @@ function PunkAveFileUploader(options) {
             attempt();
             return false;
         });
-    }
+    };
 
     if (options.blockFormWhileUploading) {
         self.blockFormWhileUploading(options.blockFormWhileUploading);
@@ -72,7 +72,10 @@ function PunkAveFileUploader(options) {
                 _.each(data.result, function (item) {
                     appendEditableImage(item);
                 });
-                self.successCallback(data);
+                var anyErrorsOccurred = _.some(data.result, { error: true });
+                if (!anyErrorsOccurred) {
+                    self.successCallback(data);
+                }
             }
         },
         start: function (e) {
