@@ -12,16 +12,12 @@ use PunkAve\FileUploaderBundle\BlueImp\UploadHandler;
  */
 class UploadHandlerTest extends \PHPUnit_Framework_TestCase
 {
-
-    /**
-     *
-     */
     public function testUploadHandlerWithUmlauts()
     {
         $uploadHandler = new UploadHandlerMock();
 
         $uploadHandlerReflection = new \ReflectionClass(UploadHandler::class);
-        $method = $uploadHandlerReflection->getMethod('trim_file_name');
+        $method = $uploadHandlerReflection->getMethod('normalize_file_name');
         $method->setAccessible(true);
         $result = $method->invokeArgs($uploadHandler, ['../Ääüö.jpg', 'jpg', null]);
         $this->assertEquals('Ääüö.jpg', $result);
