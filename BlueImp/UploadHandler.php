@@ -243,7 +243,12 @@ class UploadHandler
         );
     }
 
-    protected function trim_file_name($file_name, $type, $index) {
+    protected function normalize_file_name($file_name, $type) {
+        // If file name contains a combination of characters "a" or "o" or "u" and "\u{0308}" (used for building german umlauts),
+        // Firefox (at least on Mac) displays an additional white space which is not desired.
+        // This function converts it to a regular "umlaut" character.
+        $file_name = \Normalizer::normalize($file_name);
+
         // Remove path information and dots around the filename, to prevent uploading
         // into different directories or replacing hidden system files.
         // Also remove control characters and spaces (\x00..\x20) around the filename:
@@ -303,7 +308,7 @@ class UploadHandler
 
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error, $index) {
         $file = new \stdClass();
-        $file->name = $this->trim_file_name($name, $type, $index);
+        $file->name = $this->normalize_file_name($name, $type);
         $file->size = intval($size);
         $file->type = $type;
         if ($this->validate($uploaded_file, $file, $error, $index)) {
