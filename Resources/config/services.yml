@@ -67,13 +67,12 @@ services:
         arguments:
           - file_base_path: '%file_uploader.file_base_path%'
             web_base_path: '%file_uploader.web_base_path%'
-            request: '@request'
+            request_stack: '@request_stack'
             file_manager: '@punk_ave.file_uploader_file_manager'
             allowed_extensions: '%file_uploader.allowed_extensions%'
             sizes: '%file_uploader.sizes%'
             originals: '%file_uploader.originals%'
             max_number_of_files: '%file_uploader.max_number_of_files%'
-        scope: request
 
     # You usually won't need this sub-service directly,
     # however you can access it from a command, which is
@@ -87,6 +86,6 @@ services:
 
     punk_ave.twig.file_extension:
         class: PunkAve\FileUploaderBundle\Twig\FileExtension
-        arguments: [@service_container]
+        arguments: ['@service_container']
         tags:
             - { name: twig.extension }

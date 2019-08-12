@@ -107,7 +107,7 @@ class FileUploader
             array(
                 'upload_dir' => $uploadDir, 
                 'upload_url' => $webPath . '/' . $originals['folder'] . '/', 
-                'script_url' => $options['request']->getUri(),
+                'script_url' => $options['request_stack']->getCurrentRequest()->getUri(),
                 'image_versions' => $sizes,
                 'accept_file_types' => $allowedExtensionsRegex,
                 'max_number_of_files' => $options['max_number_of_files'],
